@@ -2,37 +2,104 @@
 #include <stdlib.h>
 #include <String.h>
 
+
+//constantes
+#define ARQUIVO "Exemplo1_Trab1_Compiladores.txt"  // aqui você pode definir qual arquivo será aberto
+#define MAX 100
  FILE *arq;
 
+//|--------------------Estrutura do lexema-----------------------|//
+
+//|--------------------------------------------------------------|//
 
 
-// Evandro Fernandes Barreto
-// Trabalho feito para matéria de compiladores
-// UNESP - BAURU 2019
-//--------------------------------------------------------//
 
-//--------------------------------------------------------//
+//|---------------------------------------------------------------|//
+//|                  Evandro Fernandes Barreto                    |//
+//|        Trabalho feito para matéria de compiladores            |//
+//|                    UNESP - BAURU 2019                         |//
+//|---------------------------------------------------------------|//
 
-//responsavel por abrir o arquivo em pascal
-abrir_arquivo ()
+
+//|--------------------Estrutura do lexema-----------------------|//
+
+typedef struct no
 {
-  arq = fopen("Exemplo1_Trab1_Compiladores.txt", "rt");// abre o arquivo para gravação
+    char word[MAX];  // palavra
+    char type[MAX];  // tipo da palavra
+    struct no *next; // aponta pra proxima
+}*lexema;
 
-  if (arq == NULL)
+///////////////////////ESTRUTURAS DA LISTA//////////////////////////
+//|-----------------------INICIA LISTA---------------------------|//
+
+// função inicia a lista refenciada com valor vazio
+init_list(lexema *lex)
+{
+    *lex = NULL; //lista = vazio
+}
+//|--------------------------------------------------------------|//
+//|----------------------INSERE NA LISTA-------------------------|//
+
+// estrutura responsavel por inserir os elementos na lista
+int insert_list(lexema *lex,char tok[MAX],char typ[MAX])
+{
+    lexema q = (lexema)malloc(sizeof(struct no)); // cria uma estrutura lexema q
+    lexema p = *lex;
+                              // cria outra lexema com o conteudo do lexema (lex) referenciado
+    if (q == NULL) // se tiver vazio
+        return 0;
+
+    strcpy(q->word,tok); //word = tok
+    strcpy(q->type,typ); //type = typ
+
+    q->next = NULL;     // proximo = vazio
+
+    if (*lex == NULL)   // verifica se ta no final da lista
+        *lex = q;       // SE SIM: atribui insere a nova palavra
+    else {              //SENAO
+        while (p->next) //PERCORRE ATÈ O FINAL
+            p = p->next;
+        p->next = q;    // aponta o final para o começo dessa nova palavra
+        }
+    return 1;
+}
+//|--------------------------------------------------------------|//
+
+//|-----------------------MOSTRA A LISTA-------------------------|//
+show_list(lexema *lex) {
+    lexema p = *lex;
+        while (p) {
+            printf("palavra: ");
+            puts(p->word);
+            printf("\n");
+            printf("tipo: ");
+            puts(p->type);
+        }
+}
+//|--------------------------------------------------------------|//
+
+
+
+//|---------------------ABRE O ARQUIVO---------------------------|//
+//responsavel por abrir o arquivo em pascal e verificar se ele existe ou não
+open_arq ()
+{
+  arq = fopen(ARQUIVO,"rt");// abre o arquivo para gravação (rt = abrir  para leitura somente)
+
+  if (arq == NULL)// se não existir o arquivo referenciado, da um aviso
   {
     printf("Problemas na abertura do arquivo\n");
     return;
   }
-
-
 }
-//--------------------------------------------------------//
+//|--------------------------------------------------------------|//
 
 
 
 
-
-//programa responsavel por verificar o fim da linha
+//|------------------------PROXIMO-------------------------------|//
+//programa responsavel por verificar o fim da linha e conta-la
 PROXIMO (int *linha_atual,char *palavra)
 {
         char normal[100];
@@ -46,8 +113,10 @@ PROXIMO (int *linha_atual,char *palavra)
 
 
 }
-//--------------------------------------------------------//
-//--------------------------------------------------------//
+//|--------------------------------------------------------------|//
+
+
+//---------------------------CODIGO---------------------------//
 CODIGO ()
 {
        int codigo_indentificador; // lexema de codigo
@@ -55,7 +124,7 @@ CODIGO ()
 
 
 }
-//-------------------------------------------------------//
+//---------------------------ERRO------------------------------//
 
 // função responsavel por mostrar os erros
 ERRO (int tipo,int linha)
@@ -78,12 +147,12 @@ ERRO (int tipo,int linha)
 
 int main ()
 {
-         int linha_atual =0; // variavel contadora da linha
-         char palavra;
-printf ("\n%i",linha_atual);
-    abrir_arquivo();// abri o arquivo.pascal
+    int linha_atual =0; // variavel contadora da linha
+    char palavra;
+
+    open_arq();// abri o arquivo.pascal
     PROXIMO(&linha_atual,&palavra);
-    printf ("\n%d",&linha_atual);
+
 
 
 
