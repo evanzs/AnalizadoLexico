@@ -1,11 +1,29 @@
+
+
+//|---------------------------------------------------------------|//
+//|                  Evandro Fernandes Barreto                    |//
+//|        Trabalho feito para matéria de compiladores            |//
+//|                    UNESP - BAURU - 2019                       |//
+//|---------------------------------------------------------------|//
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <String.h>
 
 
+
+
+
+
 //constantes
 #define ARQUIVO "Exemplo1_Trab1_Compiladores.txt"  // aqui você pode definir qual arquivo será aberto
 #define MAX 100
+	
+ 
+
+
  FILE *arq;
 
 //|--------------------Estrutura do lexema-----------------------|//
@@ -14,11 +32,6 @@
 
 
 
-//|---------------------------------------------------------------|//
-//|                  Evandro Fernandes Barreto                    |//
-//|        Trabalho feito para matéria de compiladores            |//
-//|                    UNESP - BAURU 2019                         |//
-//|---------------------------------------------------------------|//
 
 
 //|--------------------Estrutura do lexema-----------------------|//
@@ -78,7 +91,7 @@ show_list(lexema *lex) {
         }
 }
 //|--------------------------------------------------------------|//
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //|---------------------ABRE O ARQUIVO---------------------------|//
@@ -100,28 +113,80 @@ open_arq ()
 
 //|------------------------PROXIMO-------------------------------|//
 //programa responsavel por verificar o fim da linha e conta-la
-PROXIMO (int *linha_atual,char *palavra)
-{
-        char normal[100];
-
-        fgets (palavra,100,arq);
-        printf ("%s",palavra);
-        linha_atual = linha_atual +1;
-
-
-
+int PROXIMO (int line ,char *word)
+{		
+    int cont = 0;
+    int i = 0;    
+        char token [100];
+		 
+        fgets (word,100,arq); // le uma linha
+        
+        line++;
+        
+    while (word[cont] != NULL)
+	{
+		  
+		  
+		  token[cont] = word [cont];
+		  cont++;
+		  
+		  if (((word[cont]> 31) && (word[cont]< 48))||( (word[cont]> 57) && (word[cont]< 65)))
+		  {
+			
+			CODIGO (&token);		
+			
+		  }
+		  
+		  
+		  		
+	}    
+        
+        
+        
+       
+         
+	
+		
 
 
 }
 //|--------------------------------------------------------------|//
 
 
-//---------------------------CODIGO---------------------------//
-CODIGO ()
-{
-       int codigo_indentificador; // lexema de codigo
-       int codigo_de_numero;      // lexema de numeral
 
+
+
+
+
+
+
+//---------------------------CODIGO---------------------------//
+CODIGO (char *token,lexema *lexa)
+{
+      int result=0;
+      int i = 0;
+      
+      if (!strcmp(token,"program"))
+        insere_lista(l,token,"c_program");    
+     else if (!strcmp(token,"VAR"))
+          insere_lista(lexa,token,"c_var");
+     else if (!strcmp(token,"begin"))
+          insere_lista(lexa,token,"c_begin");
+     else if (!strcmp(token,"end"))
+          insere_lista(lexa,token,"c_end");
+    else if (!strcmp(token,"int"))
+          insere_lista(lexa,token,"c_int");     
+   	else if (!strcmp(token,"string"))
+          insere_lista(lexa,token,"c_string"); 
+	else if (!strcmp(token,"write"))
+          insere_lista(lexa,token,"c_write");
+	else if (!strcmp(token,"read"))
+          insere_lista(lexa,token,"c_read");  
+		  
+		  
+		  
+
+		  	  	
 
 }
 //---------------------------ERRO------------------------------//
@@ -131,30 +196,44 @@ ERRO (int tipo,int linha)
 {
      // tratamento de possiveis erros mostrando em que linhas estão
      if (tipo == 0 ) // simbolos desconhecidos
-        printf ("[",linha,"]Simbolos especiais desconhecidos");
+        printf ("[ %d ] Simbolos especiais desconhecidos.\n",linha);
      if (tipo == 1) // indentificador desconhecido
-         printf ("[",linha,"] ERRO: Indentificador invalido");
-     if (tipo == 3)// numeral mal formado
-        printf  ("[",linha,"] ERRO: Numeral mal formado ou fora do escopo");
+         printf ("[ %d ] ERRO: Indentificador invalido.\n",linha);
+     if (tipo == 2)// numeral mal formado
+        printf  ("[ %d ] ERRO: Numeral mal formado ou fora do escopo.\n",linha);
 
 
         // erro dentro do erro
-     if  (tipo > 3)
-         printf ("[",linha,"]Erro desconhecido");
+     if  (tipo > 2)
+         printf ("[ %d ]Erro desconhecido.\n",linha);
 
 }
 //-------------------------------------------------------//
 
 int main ()
 {
-    int linha_atual =0; // variavel contadora da linha
-    char palavra;
-
+     // variavel contadora da linha
+    char word[100];
+	int line = 0;
+	int cont = 0;
+	int  i = 0;
+	char token[100];
     open_arq();// abri o arquivo.pascal
-    PROXIMO(&linha_atual,&palavra);
+    
+    
+    PROXIMO (0,&word);
+    
+    
+    
+    
+    
+    
+  
+   	
+	
 
-
-
+	
+	
 
 
 
